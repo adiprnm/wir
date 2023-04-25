@@ -36,16 +36,20 @@ options.quality ||= DEFAULT_QUALITY
 
 Dir.mkdir options.output_dir unless Dir.exist? options.output_dir
 
-puts "Resizing and compressing images with"
+logger = Logger.new(STDOUT)
+logger.info { "Resizing and compressing image with options: #{options.to_h}" }
 filenames = Dir["#{options.dirname}/*"]
+logger.info { "Got #{filenames.size} images to be resized and compressed. Resizing..." }
 filenames.each_with_index do |filename, index|
   image = MiniMagick::Image.open(filename)
   extension = options.format || image.mime_type.split("/").last
   width, height = calculate_dimensions image.dimensions
-  output_path = "#{output_dir}/#{prefix}-#{index + 1}.#{extension}"
+  output_path = "#{options.output_dir}/#{options.prefix}-#{index + 1}.#{extension}"
 
+  logger.info { "Processing #{output_path}..." }
   image.resize "#{width}x#{height}"
   image.format extension
   image.write(output_path)
-  ImageOptimizer.new(output_path, quality: quality).optimize
+  ImageOptimizer.new(output_path, quality: options.quality, quiet: true).optimize
 end
+logger.info { "Done." }
