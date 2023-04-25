@@ -3,15 +3,19 @@ require "optparse"
 require "ostruct"
 require "image_optimizer"
 
-MAX_DIMENSION = 1920
-DEFAULT_QUALITY = 75
+DEFAULTS = {
+  image_quality: 75,
+  max_dimension: 1920,
+  prefix: "image",
+  output_dir: "output"
+}
 
 def calculate_dimensions(dimensions)
   maximum = dimensions.max
   minimum = dimensions.min
   
-  width = maximum.clamp(0, MAX_DIMENSION)
-  height = minimum unless width == MAX_DIMENSION
+  width = maximum.clamp(0, DEFAULTS[:max_dimension])
+  height = minimum unless width == DEFAULTS[:max_dimension]
   
   height ||= (minimum.to_f / maximum * width).ceil.to_i
   
@@ -20,19 +24,19 @@ end
 
 options = OpenStruct.new
 OptionParser.new do |opt|
-  opt.on("-m MAX_DIMENSION", "The image's maximum dimension. The default value is #{MAX_DIMENSION}") { |o| options.max_dimension = o }
-  opt.on("-q IMAGE_QUALITY", "The image quality. The default value is #{DEFAULT_QUALITY}") { |o| options.quality = o }
+  opt.on("-m MAX_DIMENSION", "The image's maximum dimension. The default value is #{DEFAULTS[:max_dimension]}") { |o| options.max_dimension = o }
+  opt.on("-q IMAGE_QUALITY", "The image quality. The default value is #{DEFAULTS[:image_quality]}") { |o| options.quality = o }
   opt.on("-d DIRECTORY_NAME", "The directory that contains the images") { |o| options.dirname = o }
-  opt.on("-p PREFIX", "The image output prefix") { |o| options.prefix = o }
+  opt.on("-p PREFIX", "The image output prefix. The default value is `#{DEFAULTS[:prefix]}`") { |o| options.prefix = o }
   opt.on("-f FORMAT", "The image format. When the option is not given, it shall use the original image format") { |o| options.format = o }
-  opt.on("-o OUTPUT_DIR", "The image output directory. The default value is `output`") { |o| options.output_dir = o }
+  opt.on("-o OUTPUT_DIR", "The image output directory. The default value is `#{DEFAULTS[:output_dir]}`") { |o| options.output_dir = o }
 end.parse!
 
 raise "Directory is not exists!" unless Dir.exist? options.dirname
 
-options.prefix ||= "image"
-options.output_dir ||= "output"
-options.quality ||= DEFAULT_QUALITY
+options.prefix ||= DEFAULTS[:prefix]
+options.output_dir ||= DEFAULTS[:output_dir]
+options.quality ||= DEFAULTS[:image_quality]
 
 Dir.mkdir options.output_dir unless Dir.exist? options.output_dir
 
