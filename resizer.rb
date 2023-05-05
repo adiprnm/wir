@@ -9,6 +9,7 @@ DEFAULTS = {
   prefix: "image",
   output_dir: "output"
 }
+ALLOWED_EXTENSIONS = ["jpg", "jpeg", "png"]
 
 def calculate_dimensions(dimensions)
   maximum = dimensions.max
@@ -42,7 +43,9 @@ Dir.mkdir options.output_dir unless Dir.exist? options.output_dir
 
 logger = Logger.new(STDOUT)
 logger.info { "Resizing and compressing image with options: #{options.to_h}" }
-filenames = Dir["#{options.dirname}/*"]
+filenames = Dir["#{options.dirname}/*"].select do |file|
+  ALLOWED_EXTENSIONS.any? { |ext| file.downcase.end_with? ext }
+end
 logger.info { "Got #{filenames.size} images to be resized and compressed. Resizing..." }
 filenames.each_with_index do |filename, index|
   image = MiniMagick::Image.open(filename)
