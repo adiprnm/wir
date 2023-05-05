@@ -46,6 +46,7 @@ filenames = Dir["#{options.dirname}/*"]
 logger.info { "Got #{filenames.size} images to be resized and compressed. Resizing..." }
 filenames.each_with_index do |filename, index|
   image = MiniMagick::Image.open(filename)
+  image.auto_orient
   extension = options.format || image.mime_type.split("/").last
   width, height = calculate_dimensions image.dimensions
   output_path = "#{options.output_dir}/#{options.prefix}-#{index + 1}.#{extension}"
