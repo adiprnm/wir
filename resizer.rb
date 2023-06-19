@@ -38,6 +38,7 @@ raise "Directory is not exists!" unless Dir.exist? options.dirname
 options.prefix ||= DEFAULTS[:prefix]
 options.output_dir ||= DEFAULTS[:output_dir]
 options.quality ||= DEFAULTS[:image_quality]
+options.quality = options.quality.to_i
 
 Dir.mkdir options.output_dir unless Dir.exist? options.output_dir
 
