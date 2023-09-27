@@ -11,12 +11,14 @@ DEFAULTS = {
 }
 ALLOWED_EXTENSIONS = ["jpg", "jpeg", "png"]
 
-def calculate_dimensions(dimensions)
+def calculate_dimensions(dimensions, options)
   maximum = dimensions.max
   minimum = dimensions.min
   
-  width = maximum.clamp(0, DEFAULTS[:max_dimension])
-  height = minimum unless width == DEFAULTS[:max_dimension]
+  max_dimension = (options.max_dimension || DEFAULTS[:max_dimensions]).to_i
+  
+  width = maximum.clamp(0, max_dimension)
+  height = minimum unless width == max_dimension
   
   height ||= (minimum.to_f / maximum * width).ceil.to_i
   
@@ -52,7 +54,7 @@ filenames.each_with_index do |filename, index|
   image = MiniMagick::Image.open(filename)
   image.auto_orient
   extension = options.format || image.mime_type.split("/").last
-  width, height = calculate_dimensions image.dimensions
+  width, height = calculate_dimensions image.dimensions, options
   output_path = "#{options.output_dir}/#{options.prefix}-#{index + 1}.#{extension}"
 
   logger.info { "Processing #{output_path}..." }
