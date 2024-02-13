@@ -1,6 +1,4 @@
 source "https://rubygems.org"
 
-gem "mini_magick"
-gem 'image_optimizer'
+gemspec
 
-gem "pry", group: :development
