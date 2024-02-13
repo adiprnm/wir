@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name        = 'wir'
-  spec.version     = '1.0.1'
+  spec.version     = '0.0.1'
   spec.authors     = ['Adi Purnama']
   spec.email       = 'adiprnm84@gmail.com'
   spec.homepage    = 'https://github.com/adiprnm/wir'

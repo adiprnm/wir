@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    wir (1.0.1)
+    wir (0.0.1)
       image_optimizer
       mini_magick
       thor
