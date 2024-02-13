@@ -6,7 +6,7 @@ module Wir
   class App < Thor
     ALLOWED_EXTENSIONS = ["jpg", "jpeg", "png"].freeze
 
-    desc "resize", "bulk-resize the images"
+    desc "resize", "Bulk-resize the images within a given directory."
 
     method_option :max_dimension,
                   aliases: "-m",
